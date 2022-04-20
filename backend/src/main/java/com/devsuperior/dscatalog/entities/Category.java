@@ -1,13 +1,11 @@
 package com.devsuperior.dscatalog.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
+@Table(name = "tv_category")
 public class Category implements Serializable {
     private static final long serialVersionUIDO = 1L;
 
