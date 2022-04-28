@@ -4,8 +4,12 @@ import com.devsuperior.dscatalog.dto.CategoryDto;
 
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
+import com.devsuperior.dscatalog.services.exception.DataBaseExeception;
 import com.devsuperior.dscatalog.services.exception.ResourceNotFoundExeception;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -22,11 +26,12 @@ public class CategoryService {
     private CategoryRepository repository;
 
     @Transactional //readOnly = true
-    public List<CategoryDto> findAll(){
+    public List<CategoryDto> findAll() {
         List<Category> list = repository.findAll();
 
         return list.stream().map(x -> new CategoryDto(x)).collect(Collectors.toList());
     }
+
     @Transactional
     public CategoryDto findById(Long id) {
         Optional<Category> obj = repository.findById(id);
@@ -45,16 +50,28 @@ public class CategoryService {
 
     @Transactional
     public CategoryDto update(Long id, CategoryDto dto) {
-        try{
-        Category entity = repository.getOne(id); //findByID efetiva no banco de dados e o getOne nao toca no banco...instancia um objeto provisorio
-        entity.setName(dto.getName());
-        entity = repository.save(entity);
-        return new CategoryDto(entity);
+        try {
+            Category entity = repository.getOne(id); //findByID efetiva no banco de dados e o getOne nao toca no banco...instancia um objeto provisorio
+            entity.setName(dto.getName());
+            entity = repository.save(entity);
+            return new CategoryDto(entity);
 
-    }catch (EntityNotFoundException e){
-            throw new ResourceNotFoundExeception("id not found" +id);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundExeception("id not found" + id);
         }
-  
+
     }
 
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundExeception("id not found" + id);
+        }
+        catch (DataIntegrityViolationException e){
+            throw new DataBaseExeception("Integrity Violetion");
+
+        }
+    }
 }

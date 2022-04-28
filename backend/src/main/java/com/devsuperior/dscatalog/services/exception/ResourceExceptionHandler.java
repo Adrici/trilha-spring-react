@@ -25,4 +25,19 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
     }
 
+    @ExceptionHandler(DataBaseExeception.class)
+    public ResponseEntity<StanderError> database(DataBaseExeception e, HttpServletRequest request){
+
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StanderError err = new StanderError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Database Execption");
+        err.setMessage((e.getMessage()));
+        err.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+
 }
