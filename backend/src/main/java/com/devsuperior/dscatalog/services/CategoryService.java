@@ -4,10 +4,11 @@ import com.devsuperior.dscatalog.dto.CategoryDto;
 
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
-import com.devsuperior.dscatalog.services.exception.EntityNotFoundExeception;
+import com.devsuperior.dscatalog.services.exception.ResourceNotFoundExeception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class CategoryService {
     @Transactional
     public CategoryDto findById(Long id) {
         Optional<Category> obj = repository.findById(id);
-        Category entity = obj.orElseThrow(() -> new EntityNotFoundExeception("Entity not found"));
+        Category entity = obj.orElseThrow(() -> new ResourceNotFoundExeception("Entity not found"));
         return new CategoryDto(entity);
     }
 
@@ -41,4 +42,19 @@ public class CategoryService {
 
         return new CategoryDto(entity);
     }
+
+    @Transactional
+    public CategoryDto update(Long id, CategoryDto dto) {
+        try{
+        Category entity = repository.getOne(id); //findByID efetiva no banco de dados e o getOne nao toca no banco...instancia um objeto provisorio
+        entity.setName(dto.getName());
+        entity = repository.save(entity);
+        return new CategoryDto(entity);
+
+    }catch (EntityNotFoundException e){
+            throw new ResourceNotFoundExeception("id not found" +id);
+        }
+  
+    }
+
 }
