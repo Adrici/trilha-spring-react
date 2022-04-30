@@ -1,23 +1,20 @@
 package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.dto.CategoryDto;
-
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.services.exception.DataBaseExeception;
 import com.devsuperior.dscatalog.services.exception.ResourceNotFoundExeception;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.util.List;
-
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service //registra a classe como um componente que participa de sistema de injeção de dependencia automatizada do spring
 public class CategoryService {
@@ -26,10 +23,10 @@ public class CategoryService {
     private CategoryRepository repository;
 
     @Transactional //readOnly = true
-    public List<CategoryDto> findAll() {
-        List<Category> list = repository.findAll();
+    public Page<CategoryDto> findAllPaged(PageRequest pageRequest) {
+        Page<Category> list = repository.findAll(pageRequest);
 
-        return list.stream().map(x -> new CategoryDto(x)).collect(Collectors.toList());
+        return list.map(x -> new CategoryDto(x));
     }
 
     @Transactional
@@ -74,4 +71,6 @@ public class CategoryService {
 
         }
     }
+
+
 }
