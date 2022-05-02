@@ -21,6 +21,8 @@ public class Category implements Serializable {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updateddAt;
 
+   //necessário para o hibernate identificar a classe
+    @Deprecated
     public Category() {
 
     }
@@ -70,6 +72,7 @@ public class Category implements Serializable {
     }
 
     @Override
+    //para o java entender o que vai diferenciar um objeto de outro. Ex.: nome e sobrenome
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Category)) return false;
