@@ -26,6 +26,9 @@ public class ProductService {
     @Autowired
     private ProductRepository repository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Transactional() //readOnly = true
     public Page<ProductDto> findAllPaged(PageRequest pageRequest) {
         Page<Product> list = repository.findAll(pageRequest);
@@ -43,17 +46,20 @@ public class ProductService {
     @Transactional
     public ProductDto insert(ProductDto dto) {
         Product entity = new Product();
-       // entity.setName(dto.getName());
+        copyDtoToEntity(dto, entity);
+
         entity = repository.save(entity);
 
         return new ProductDto(entity);
     }
 
+
+
     @Transactional
     public ProductDto update(Long id, ProductDto dto) {
         try {
             Product entity = repository.getOne(id); //findByID efetiva no banco de dados e o getOne nao toca no banco...instancia um objeto provisorio
-           // entity.setName(dto.getName());
+            copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
             return new ProductDto(entity);
 
@@ -75,6 +81,19 @@ public class ProductService {
 
         }
     }
+    private void copyDtoToEntity(ProductDto dto, Product entity) {
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setDate(dto.getDate());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setPrice(dto.getPrice());
 
+        entity.getCategories().clear();
+
+        for (CategoryDto catDto : dto.getCategories()){
+            Category category = categoryRepository.getOne(catDto.getId());
+            entity.getCategories().add(category);
+        }
+    }
 
 }
