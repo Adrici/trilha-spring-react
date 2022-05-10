@@ -3,7 +3,9 @@ package com.devsuperior.dscatalog.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_category")
@@ -21,7 +23,11 @@ public class Category implements Serializable {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updateddAt;
 
-   //necessário para o hibernate identificar a classe
+   @ManyToMany(mappedBy = "categories")
+    private Set<Product> products = new HashSet<>();
+
+
+    //necessário para o hibernate identificar a classe
     @Deprecated
     public Category() {
 
@@ -69,6 +75,10 @@ public class Category implements Serializable {
     public void preUpdate(){
         updateddAt = Instant.now();
 
+    }
+
+    public Set<Product> getProducts() {
+        return products;
     }
 
     @Override
