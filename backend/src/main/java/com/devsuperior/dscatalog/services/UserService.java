@@ -15,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -37,8 +38,8 @@ public class UserService {
 
 
     @Transactional() //readOnly = true
-    public Page<UserDto> findAllPaged(PageRequest pageRequest) {
-        Page<User> list = repository.findAll(pageRequest);
+    public Page<UserDto> findAllPaged(Pageable pageable) {
+        Page<User> list = repository.findAll(pageable);
 
         return list.map(x -> new UserDto(x));
     }
