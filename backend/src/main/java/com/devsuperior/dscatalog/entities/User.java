@@ -20,23 +20,28 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    @ManyToMany
+//    public String sobrenome(){
+//        String sobrenome = firstName + lastName;
+//        return sobrenome;
+//    }
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tb_user_role",
-            joinColumns = @JoinColumn(name ="user_id"),
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(){
+    public User() {
 
     }
 
-    public User(Long id, String firstName, String lastName, String email, String passaword) {
+    public User(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = passaword;
+        this.password = password;
     }
 
     public Long getId() {
@@ -71,12 +76,12 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getPassaword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassaword(String passaword) {
-        this.password = passaword;
+    public void setPassword(String passaword) {
+        this.password = password;
     }
 
     public Set<Role> getRoles() {
@@ -96,3 +101,5 @@ public class User implements Serializable {
         return Objects.hash(getId());
     }
 }
+
+
