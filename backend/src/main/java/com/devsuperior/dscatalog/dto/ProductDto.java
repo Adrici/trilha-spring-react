@@ -2,23 +2,32 @@ package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
-import com.devsuperior.dscatalog.entities.User;
-
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 public class ProductDto implements Serializable {
     private static final long serialVersionUIDO = 1L;
 
+
+    //anotamos no DTO e nao na entidade porque é o DTO que passa na requisição
     private Long id;
+
+    @Size(min = 5, max=60, message = "Deve ter entre 5 e 60 caracteres")
+    @NotBlank(message = "O campo não pode ser vazio")
     private String name;
     private String description;
+
+    @Positive(message = "O preço deve ser um valor positivo")
     private Double price;
     private String imgUrl;
+
+    @PastOrPresent(message = "A data do produto não pode ser futura")
     private Instant date;
 
     private List<CategoryDto> categories = new ArrayList<>();

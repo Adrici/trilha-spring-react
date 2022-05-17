@@ -22,11 +22,6 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-//    public String sobrenome(){
-//        String sobrenome = firstName + lastName;
-//        return sobrenome;
-//    }
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tb_user_role",
