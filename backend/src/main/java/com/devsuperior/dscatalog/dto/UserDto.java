@@ -4,7 +4,7 @@ import com.devsuperior.dscatalog.entities.User;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
